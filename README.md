@@ -132,5 +132,6 @@ FEATURES/RESTRICTIONS
 
 *	Works on Xenix for Xenix .o files as well.
 
-(1998-1999) Joseph H. Allen [jhallen@world.std.com]
-(2017-2018) Ricardo Quesada [ricardoquesada@gmail.com]
+(1998-1999 Author) Joseph H. Allen [jhallen@world.std.com]
+
+(2017-2018 Port to Linux/MacOS) Ricardo Quesada [ricardoquesada@gmail.com]
