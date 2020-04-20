@@ -343,6 +343,10 @@
 
 #define EXP_ORD 0x80
 
+#if defined(_WIN32) || defined(_WIN64)
+#define strcasecmp _stricmp
+#endif
+
 typedef char *PCHAR,**PPCHAR;
 typedef unsigned char *PUCHAR;
 typedef unsigned long UINT;
