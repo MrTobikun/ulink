@@ -67,6 +67,57 @@ UINT libPathCount=0;
 PCHAR *libPath=NULL;
 char *entryPoint=NULL;
 
+void printUsage()
+{
+	printf("Usage:   [OPTIONS]\n\n");
+	printf("    Each file may be an object file, a library, or a Win32 resource file.\n");
+	printf("    If no extension is specified, .obj is assumed.\n");
+	printf("    Modules are only loaded from library files if they are required to match an external reference.\n");
+	printf("    Options and files may be listed in any order, all mixed together.\n");
+	printf("\n");
+	printf("The following options are permitted:\n\n");
+	printf("    -f,   --file, NAME                  Load additional options from response file NAME\n");
+	printf("    -c,   --case-sensitivity             Enable Case sensitivity\n");
+	printf("    -dc,  --disable-case-sensitivity     Disable Case sensitivity\n");
+	printf("    -p,   --segment-padding              Enable segment padding\n");
+	printf("    -dp,  --disable-segment-padding      Disable segment padding\n");
+	printf("    -m,   --map-file                     Enable map file\n");
+	printf("    -dm,  --disable-map-file             Disable map file\n");
+	printf("    -h,   --help                         Display this help list\n");
+	printf("    -L,   --search-list DIR              Add directory DIR to search list\n");
+	printf("    -o,   --output NAME                  Choose output file NAME\n");
+	printf("    -fmt, --format FMT                   Choose output format FMT\n");
+	printf("        Available options are:\n");
+	printf("            COM - MSDOS COM file\n");
+	printf("            EXE - MSDOS EXE file\n");
+	printf("            PE  - Win32 PE Executable\n");
+	printf("    -e,   --entry NAME                   Use public symbol NAME as the entry point\n");
+	printf("\n");
+	printf("Options for PE files:\n\n");
+	printf("    -b,  --base ADDR                      Set base ADDR of image\n");
+	printf("    -fa, --filealign ADDR                 Set section alignment in file\n");
+	printf("    -oa, --objectalign ADDR               Set section alignment in memory\n");
+	printf("    -ss, --subsystem SYS                  Set subsystem used\n");
+	printf("        Available options are:\n");
+	printf("            console - Select character mode\n");
+	printf("                con       \"\n");
+	printf("                char      \"\n");
+	printf("            windows - Select windowing mode\n");
+	printf("                win       \"\n");
+	printf("                gui       \"\n");
+	printf("            native - Select native mode\n");
+	printf("            posix - Select POSIX mode\n");
+	printf("    -ssv, --subsysver MAJOR.MINOR          Select subsystem version MAJOR.MINOR\n");
+	printf("    -osv, --osver MAJOR.MINOR              Select OS version MAJOR.MINOR\n");
+	printf("    -stb,  --stub CODE                     Use CODE as the MSDOS stub\n");
+	printf("    -dll, --build-dll                      Build DLL instead of EXE\n");
+	printf("    -sts, --stacksize SIZE                 Set stack size to SIZE\n");
+	printf("    -scs, --stackcommitsize SIZE           Set stack commit size to SIZE\n");
+	printf("    -hs,  --heapsize SIZE                  Set heap size to SIZE\n");
+	printf("    -hcs, --heapcommitsize SIZE            Set heap commit size to SIZE\n");
+	exit(0);
+}
+
 void processArgs(int argc,char **argv)
 {
     long i,j;
@@ -691,68 +742,11 @@ void processArgs(int argc,char **argv)
 	    filecount++;
 	}
     }
-    if(helpRequested || !filecount)
-    {
-	printf("Usage: ALINK [file [file [...]]] [options]\n");
-	printf("\n");
-	printf("    Each file may be an object file, a library, or a Win32 resource\n");
-	printf("    file. If no extension is specified, .obj is assumed. Modules are\n");
-	printf("    only loaded from library files if they are required to match an\n");
-	printf("    external reference.\n");
-	printf("    Options and files may be listed in any order, all mixed together.\n");
-	printf("\n");
-	printf("The following options are permitted:\n");
-	printf("\n");
-	printf("    @name   Load additional options from response file name\n");
-	printf("    -c      Enable Case sensitivity\n");
-	printf("    -c+     Enable Case sensitivity\n");
-	printf("    -c-     Disable Case sensitivity\n");
-	printf("    -p      Enable segment padding\n");
-	printf("    -p+     Enable segment padding\n");
-	printf("    -p-     Disable segment padding\n");
-	printf("    -m      Enable map file\n");
-	printf("    -m+     Enable map file\n");
-	printf("    -m-     Disable map file\n");
-	printf("----Press Enter to continue---");
-	while(((c=getchar())!='\n') && (c!=EOF));
-	printf("\n");
-	printf("    -h      Display this help list\n");
-	printf("    -H      \"\n");
-	printf("    -?      \"\n");
-	printf("    -L ddd  Add directory ddd to search list\n");
-	printf("    -o name Choose output file name\n");
-	printf("    -oXXX   Choose output format XXX\n");
-	printf("        Available options are:\n");
-	printf("            COM - MSDOS COM file\n");
-	printf("            EXE - MSDOS EXE file\n");
-	printf("            PE  - Win32 PE Executable\n");
-	printf("    -entry name   Use public symbol name as the entry point\n");
-	printf("----Press Enter to continue---");
-	while(((c=getchar())!='\n') && (c!=EOF));
-	printf("\nOptions for PE files:\n");
-	printf("    -base addr        Set base address of image\n");
-	printf("    -filealign addr   Set section alignment in file\n");
-	printf("    -objectalign addr Set section alignment in memory\n");
-	printf("    -subsys xxx       Set subsystem used\n");
-	printf("        Available options are:\n");
-	printf("            console   Select character mode\n");
-	printf("            con       \"\n");
-	printf("            char      \"\n");
-	printf("            windows   Select windowing mode\n");
-	printf("            win       \"\n");
-	printf("            gui       \"\n");
-	printf("            native    Select native mode\n");
-	printf("            posix     Select POSIX mode\n");
-	printf("    -subsysver x.y    Select subsystem version x.y\n");
-	printf("    -osver x.y        Select OS version x.y\n");
-	printf("    -stub xxx         Use xxx as the MSDOS stub\n");
-	printf("    -dll              Build DLL instead of EXE\n");
-	printf("    -stacksize xxx    Set stack size to xxx\n");
-	printf("    -stackcommitsize xxx Set stack commit size to xxx\n");
-	printf("    -heapsize xxx     Set heap size to xxx\n");
-	printf("    -heapcommitsize xxx Set heap commit size to xxx\n");
-	exit(0);
+
+    if (helpRequested || !filecount) {
+		printUsage();
     }
+
     if((output_type!=OUTPUT_PE) &&
        (gotoalign || gotfalign || gotbase || gotsubsys || gotstack ||
 	gotstackcommit || gotheap || gotheapcommit || buildDll || stubName || 
@@ -1611,14 +1605,14 @@ void generateMap()
     fclose(afile);
 }
 
-int main(int argc,char *argv[])
+int main(int argc, char* argv[])
 {
     long i,j;
     int isend;
     char *libList;
     PPUBLIC q;
 
-    printf("ALINK v1.6 (C) Copyright 1998-9 Anthony A.J. Williams.\n");
+    printf("ULINK (C) Copyright 1998-9 Anthony A.J. Williams.\n");
     printf("All Rights Reserved\n\n");
 
     libList=getenv("LIB");
